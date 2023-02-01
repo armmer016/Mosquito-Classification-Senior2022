@@ -1,71 +1,74 @@
-# Micro Speech Example
+# Mosquito Classification 11 Class
 
-This example shows how to run a 20 kB model that can recognize 2 keywords,
-"yes" and "no", from speech data.
+This project is designed to classify 11 different species of mosquitoes based on their wingbeat sounds. The input to the model is 300ms of mosquito wingbeat sound.
 
-The application listens to its surroundings with a microphone and indicates
-when it has detected a word by displaying data on a screen.
+## Code Overview
 
-## Deploy to ESP32
+The `loop()` function is the main loop of the project that performs the following tasks:
 
-The following instructions will help you build and deploy this sample
-to [ESP32](https://www.espressif.com/en/products/hardware/esp32/overview)
-devices using the [ESP IDF](https://github.com/espressif/esp-idf).
+1. Fetch the audio for the current time using `LatestAudioTimestamp()`.
 
-The sample has been tested on ESP-IDF version `release/v4.2` and `release/v4.4` with the following devices:
-- [ESP32-DevKitC](http://esp-idf.readthedocs.io/en/latest/get-started/get-started-devkitc.html)
-- [ESP32-S3-DevKitC](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html)
-- [ESP-EYE](https://github.com/espressif/esp-who/blob/master/docs/en/get-started/ESP-EYE_Getting_Started_Guide.md)
+2. Call the `PopulateFeatureData` method of the `feature_provider` object to populate the feature buffer with audio data for the current time.
 
-### Install the ESP IDF
+3. Copy the feature buffer to the model input buffer `model_input_buffer`.
 
-Follow the instructions of the
-[ESP-IDF get started guide](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/index.html)
-to setup the toolchain and the ESP-IDF itself.
+4. Run the model using the `interpreter->Invoke()` method.
 
-The next steps assume that the
-[IDF environment variables are set](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/index.html#step-4-set-up-the-environment-variables) :
+5. Obtain a pointer to the output tensor of the model using `interpreter->output(0)`.
 
- * The `IDF_PATH` environment variable is set
- * `idf.py` and Xtensa-esp32 tools (e.g. `xtensa-esp32-elf-gcc`) are in `$PATH`
+6. Use the `recognizer->ProcessLatestResults` method to process the output of the model and determine whether a command was recognized.
 
+7. Call the `RespondToCommand` function to respond to the recognized command.
 
-### Building the example
+## Requirements
 
-Set the chip target (For esp32s3 target, IDF version `release/v4.4` is needed):
+To run this project, you will need the following:
 
-```
-idf.py set-target esp32s3
-```
+- A development board with an ESP32 microcontroller.
 
-Then build with `idf.py`
-```
-idf.py build
-```
+- A INMP441 microphone to capture the mosquito wingbeat sounds.
 
-### Load and run the example
+- A trained TensorFlow Lite model for mosquito classification.
 
-To flash (replace `/dev/ttyUSB0` with the device serial port):
-```
-idf.py --port /dev/ttyUSB0 flash
-```
+- The [Arduino Core for ESP32](https://github.com/espressif/arduino-esp32) library for programming the ESP32 board.
 
-Monitor the serial output:
-```
-idf.py --port /dev/ttyUSB0 monitor
-```
+- The [TensorFlow Lite for Microcontrollers](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/lite/micro) library for running the model on the ESP32.
 
-Use `Ctrl+]` to exit.
+## Usage
 
-The previous two commands can be combined:
-```
-idf.py --port /dev/ttyUSB0 flash monitor
-```
+To use this project, follow these steps:
 
-### Sample output
+1. Connect the amplifier and microphone to the ESP32 board.
 
-  * When a keyword is detected you will see following output sample output on the log screen:
+2. Upload the trained TensorFlow Lite model to the ESP32.
 
-```
-Heard yes (<score>) at <time>
-```
+3. Upload the code to the ESP32 board.
+
+4. Open the serial monitor to view the results of the classification.
+
+## Conclusion
+
+This project demonstrates the feasibility of using an ESP32 microcontroller and a TensorFlow Lite model for real-time mosquito classification based on their wingbeat sounds. With further development, it has the potential to be used as a tool for mosquito control and disease prevention.
+
+## Faculty of ICT Mahidol University, Senior Project 2022
+
+This project was completed as a senior project by the following students:
+
+- MR. THANAWIT THAMPAKORN (6288051) 
+- MISS KANPITCHA ASSAWAVINIJKULCHAI (6288064)
+- MR. WASIN HEESAWAT (6288077)
+
+The project was advised by:
+- PROF. DR. PETER HADDAWY (Advisor)
+- DR. DOLVARA GUNA-TILAKA (Co-Advisor)
+
+This project was submitted in partial fulfillment of the requirements for the degree of Bachelor of Science in Information and Communication Technology at the Faculty of Information and Communication Technology, Mahidol University in 2022.
+
+## Authors
+<a href="https://github.com/armmer016/Mosquito-Sensor-Senior2022/graphs/contributors">
+   
+  <img src="https://contrib.rocks/image?repo=armmer016/Mosquito-Sensor-Senior2022" /> 
+  <img src="https://contrib.rocks/image?repo=oatact/Object-oriented-Programming" />
+  <img src="https://contrib.rocks/image?repo=Kanpitcha-Ping/ITCS209-Object-Oriented-Programming" />
+    
+</a>

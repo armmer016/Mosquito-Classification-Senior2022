@@ -1,4 +1,4 @@
-# Mosquito Classification 11 Class
+# Mosquito Classification
 
 This project is designed to classify 11 different species of mosquitoes based on their wingbeat sounds. The input to the model is 300ms of mosquito wingbeat sound.
 

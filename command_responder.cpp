@@ -13,17 +13,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 #include <Arduino.h>
+
 #include "command_responder.h"
+
 
 // The default implementation writes out the name of the recognized command
 // to the error console. Real applications will want to take some custom
 // action instead, and should implement their own versions of this function.
+
+// Create An LCD Object. Signals: [ RS, EN, D4, D5, D6, D7 ]
+// LiquidCrystal My_LCD(13, 12, 17, 18, 19, 21);
+
 void RespondToCommand(tflite::ErrorReporter* error_reporter,
                       int32_t current_time, const char* found_command,
-                      uint8_t score, bool is_new_command) {
+                      uint8_t score, bool is_new_command, LiquidCrystal lcd) {
   if (is_new_command) {
+    lcd.clear();
     Serial.printf( "Heard %s", found_command);
                          Serial.printf(" (%.2f) ",float((float)score/255));
                          Serial.printf("@%dms\n",current_time);
+    
+    lcd.print(found_command);
+    lcd.setCursor(0, 1);
+    lcd.print(float((float)score/255));
   }
 }

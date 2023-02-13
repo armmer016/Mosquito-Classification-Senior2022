@@ -28,8 +28,10 @@ limitations under the License.
 #include "tensorflow/lite/micro/system_setup.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 #include <esp_pm.h>
+#include <LiquidCrystal.h>
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
+LiquidCrystal My_LCD(13, 12, 4, 18, 19, 21);
 tflite::ErrorReporter* error_reporter = nullptr;
 const tflite::Model* model = nullptr;
 tflite::MicroInterpreter* interpreter = nullptr;
@@ -49,8 +51,15 @@ uint8_t* model_input_buffer = nullptr;
 }  // namespace
 
 // The name of this function is important for Arduino compatibility.
+
+
 void setup() {
   Serial.begin(115200);
+  // Initialize The LCD. Parameters: [ Columns, Rows ]
+  My_LCD.begin(16, 2);
+  // Clears The LCD Display
+//  My_LCD.clear();
+  My_LCD.setCursor(0, 0);
 //   esp_pm_config_esp32_t pm_config = {
 //     .max_freq_mhz = ESP_PM_CPU_FREQ_MAX,
 //     .min_freq_mhz = ESP_PM_CPU_FREQ_MAX,
@@ -214,5 +223,6 @@ void loop() {
   // just prints to the error console, but you should replace this with your
   // own function for a real application.
   RespondToCommand(error_reporter, current_time, found_command, score,
-                   is_new_command);
+                   is_new_command,My_LCD);
+  
 }
